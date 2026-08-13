@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, Lock, User as UserIcon, ArrowRight, ShieldCheck, Sparkles, Check, Moon } from 'lucide-react';
+import { Mail, Phone, Lock, User as UserIcon, ArrowRight, Sparkles } from 'lucide-react';
 import { User, AuthTab, AuthMethod } from '../types';
 
 interface AuthPageProps {
@@ -7,7 +7,7 @@ interface AuthPageProps {
   onBackToOverview: () => void;
 }
 
-export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverview }) => {
+export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
   const [authTab, setAuthTab] = useState<AuthTab>('login');
   const [activeMethod, setActiveMethod] = useState<AuthMethod>('email');
   
@@ -37,7 +37,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
       } else {
         setErrorMsg('Google login failed. Please try again.');
       }
-    } catch (err) {
+    } catch {
       // Fallback local google login
       onAuthSuccess({
         id: 'usr_google_' + Date.now(),
@@ -75,7 +75,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
           name: name || data.user.name,
         });
       }
-    } catch (err) {
+    } catch {
       // Fallback local auth
       onAuthSuccess({
         id: 'usr_' + Date.now(),
@@ -122,7 +122,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
       if (data.success) {
         onAuthSuccess(data.user);
       }
-    } catch (err) {
+    } catch {
       onAuthSuccess({
         id: 'usr_phone_' + Date.now(),
         name: 'Phone User (' + phoneNumber + ')',
@@ -146,21 +146,18 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      
-      {/* Subtle Ambient Background Gradients */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-blue-950/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden transition-colors">
       
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center z-10">
         {/* Login / Sign Up Tab Switcher */}
-        <div className="inline-flex p-1 bg-slate-900 rounded-xl border border-slate-800">
+        <div className="inline-flex p-1 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <button
             onClick={() => { setAuthTab('login'); setErrorMsg(''); }}
             id="tab-auth-login"
-            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all ${
+            className={`px-5 py-2 rounded-lg text-xs font-black transition-all ${
               authTab === 'login'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
             Login
@@ -168,10 +165,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
           <button
             onClick={() => { setAuthTab('signup'); setErrorMsg(''); }}
             id="tab-auth-signup"
-            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all ${
+            className={`px-5 py-2 rounded-lg text-xs font-black transition-all ${
               authTab === 'signup'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
             Sign Up
@@ -181,10 +178,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
 
       {/* Main Form Box */}
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md z-10 px-4">
-        <div className="bg-slate-900/90 backdrop-blur-md py-8 px-6 sm:px-10 shadow-2xl rounded-2xl border border-slate-800">
+        <div className="bg-white dark:bg-zinc-950 py-8 px-6 sm:px-10 shadow-sm rounded-2xl border border-zinc-200 dark:border-zinc-800 transition-colors">
           
           {errorMsg && (
-            <div className="mb-5 bg-rose-950/80 border border-rose-800 text-rose-300 p-3 rounded-xl text-xs font-medium">
+            <div className="mb-5 bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200 p-3 rounded-xl text-xs font-bold">
               {errorMsg}
             </div>
           )}
@@ -197,7 +194,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
               onClick={handleGoogleAuth}
               disabled={isLoading}
               id="btn-auth-google"
-              className="w-full flex items-center justify-center space-x-3 px-4 py-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-white font-medium text-sm rounded-xl shadow-md transition-all group"
+              className="w-full flex items-center justify-center space-x-3 px-4 py-3 bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-extrabold text-sm rounded-xl shadow-sm transition-all"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -225,26 +222,26 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
               <button
                 type="button"
                 onClick={() => setActiveMethod('email')}
-                className={`flex items-center justify-center space-x-2 p-2.5 rounded-xl text-xs font-semibold border transition-all ${
+                className={`flex items-center justify-center space-x-2 p-2.5 rounded-xl text-xs font-bold border transition-all ${
                   activeMethod === 'email'
-                    ? 'bg-slate-800 border-blue-500 text-blue-300 shadow-md'
-                    : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 border-zinc-900 dark:border-zinc-100 shadow-sm'
+                    : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                 }`}
               >
-                <Mail className="w-4 h-4 text-blue-400" />
+                <Mail className="w-4 h-4" />
                 <span>Continue with Email</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveMethod('phone')}
-                className={`flex items-center justify-center space-x-2 p-2.5 rounded-xl text-xs font-semibold border transition-all ${
+                className={`flex items-center justify-center space-x-2 p-2.5 rounded-xl text-xs font-bold border transition-all ${
                   activeMethod === 'phone'
-                    ? 'bg-slate-800 border-blue-500 text-blue-300 shadow-md'
-                    : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 border-zinc-900 dark:border-zinc-100 shadow-sm'
+                    : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                 }`}
               >
-                <Phone className="w-4 h-4 text-blue-400" />
+                <Phone className="w-4 h-4" />
                 <span>Continue with Phone</span>
               </button>
             </div>
@@ -253,10 +250,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-800" />
+              <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-slate-900 px-3 text-slate-500 font-semibold">
+              <span className="bg-white dark:bg-zinc-950 px-3 text-zinc-400 font-extrabold">
                 Or fill details below
               </span>
             </div>
@@ -266,25 +263,25 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
           {activeMethod === 'phone' ? (
             <form onSubmit={otpSent ? handleVerifyOtp : handleSendOtp} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                   Phone Number
                 </label>
                 <div className="relative">
-                  <Phone className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <Phone className="w-4 h-4 text-zinc-400 absolute left-3 top-3" />
                   <input
                     type="tel"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     placeholder="+1 234 567 8900"
                     disabled={otpSent}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl py-2.5 pl-10 pr-3 text-sm text-white placeholder-slate-600 focus:outline-none"
+                    className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus:border-zinc-900 dark:focus:border-zinc-100 rounded-xl py-2.5 pl-10 pr-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               {otpSent && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                     Enter Verification Code (OTP)
                   </label>
                   <input
@@ -293,9 +290,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
                     onChange={(e) => setOtpCode(e.target.value)}
                     placeholder="1234"
                     maxLength={6}
-                    className="w-full bg-slate-950 border border-blue-500/50 rounded-xl py-2.5 px-3 text-sm text-white placeholder-slate-600 text-center tracking-widest font-mono focus:outline-none"
+                    className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-xl py-2.5 px-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 text-center tracking-widest font-mono focus:outline-none"
                   />
-                  <p className="text-[11px] text-blue-400 mt-1">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1">
                     ✓ Code sent to {phoneNumber}. (Enter 1234 for quick verify)
                   </p>
                 </div>
@@ -305,7 +302,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
                 type="submit"
                 disabled={isLoading}
                 id="btn-auth-phone-submit"
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl text-sm shadow-md transition-all"
+                className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 font-black rounded-xl text-sm shadow-sm transition-all"
               >
                 {isLoading ? 'Processing...' : otpSent ? 'Verify & Login' : 'Send SMS Verification Code'}
               </button>
@@ -315,52 +312,52 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
             <form onSubmit={handleEmailAuth} className="space-y-4">
               {authTab === 'signup' && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                     Full Name (Optional)
                   </label>
                   <div className="relative">
-                    <UserIcon className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                    <UserIcon className="w-4 h-4 text-zinc-400 absolute left-3 top-3" />
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Abdullah / Amina"
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl py-2.5 pl-10 pr-3 text-sm text-white placeholder-slate-600 focus:outline-none"
+                      className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus:border-zinc-900 dark:focus:border-zinc-100 rounded-xl py-2.5 pl-10 pr-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none"
                     />
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-3" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl py-2.5 pl-10 pr-3 text-sm text-white placeholder-slate-600 focus:outline-none"
+                    className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus:border-zinc-900 dark:focus:border-zinc-100 rounded-xl py-2.5 pl-10 pr-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <Lock className="w-4 h-4 text-zinc-400 absolute left-3 top-3" />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl py-2.5 pl-10 pr-3 text-sm text-white placeholder-slate-600 focus:outline-none"
+                    className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus:border-zinc-900 dark:focus:border-zinc-100 rounded-xl py-2.5 pl-10 pr-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -369,7 +366,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
                 type="submit"
                 disabled={isLoading}
                 id="btn-auth-email-submit"
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl text-sm shadow-md transition-all flex items-center justify-center space-x-2"
+                className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 font-black rounded-xl text-sm shadow-sm transition-all flex items-center justify-center space-x-2"
               >
                 <span>{isLoading ? 'Loading...' : authTab === 'login' ? 'Sign In with Email' : 'Create Account'}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -378,13 +375,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
           )}
 
           {/* Quick Guest Alternative */}
-          <div className="mt-6 pt-4 border-t border-slate-800/80 text-center">
+          <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-800 text-center">
             <button
               onClick={handleGuestLogin}
               id="btn-auth-guest"
-              className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-center space-x-1.5 w-full py-2 bg-slate-950/60 rounded-lg border border-slate-800"
+              className="text-xs font-extrabold text-zinc-700 dark:text-zinc-300 hover:underline transition-colors flex items-center justify-center space-x-1.5 w-full py-2 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800"
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+              <Sparkles className="w-3.5 h-3.5" />
               <span>Or Skip & Continue as Guest</span>
             </button>
           </div>
@@ -395,3 +392,4 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess, onBackToOverv
     </div>
   );
 };
+

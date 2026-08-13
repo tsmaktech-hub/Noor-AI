@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, BookOpen, Bookmark, ShieldAlert, RefreshCw, Copy, Check, MessageSquare, Compass, HelpCircle } from 'lucide-react';
+import { Sparkles, Send, BookOpen, Bookmark, ShieldAlert, RefreshCw, HelpCircle } from 'lucide-react';
 import { IslamicAIResponse, QAMessage, SavedEvidence } from '../types';
 import { EvidenceCard } from './EvidenceCard';
 
@@ -25,7 +25,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
 }) => {
   const [messages, setMessages] = useState<QAMessage[]>([]);
   const [inputQuery, setInputQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory] = useState<string>('All');
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
 
@@ -109,27 +109,27 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 font-sans">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 font-sans text-zinc-900 dark:text-zinc-100 transition-colors">
       
       {/* Top Banner & Disclaimer */}
-      <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl mb-8">
+      <div className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm mb-8 transition-colors">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-800 text-blue-400 flex items-center justify-center shrink-0 border border-slate-700">
+            <div className="w-10 h-10 rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 flex items-center justify-center shrink-0 border border-zinc-300 dark:border-zinc-800 shadow-sm">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-zinc-900 dark:text-white">
                 Noor AI Evidence Assistant
               </h1>
-              <p className="text-xs sm:text-sm text-slate-300">
+              <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
                 Type any question to receive authentic answers with Arabic Uthmani Quran verses and Hadith citations.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-blue-300">
-            <ShieldAlert className="w-4 h-4 text-blue-400 shrink-0" />
+          <div className="flex items-center space-x-2 bg-zinc-100 dark:bg-zinc-900 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-300">
+            <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>Educational AI Companion • For fatwas consult a scholar</span>
           </div>
         </div>
@@ -137,9 +137,9 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
 
       {/* Suggested Quick Prompts (if chat is empty) */}
       {messages.length === 0 && (
-        <div className="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl mb-8">
-          <h2 className="text-sm font-bold text-blue-300 uppercase tracking-wider mb-4 flex items-center space-x-2">
-            <HelpCircle className="w-4 h-4 text-blue-400" />
+        <div className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm mb-8 transition-colors">
+          <h2 className="text-xs font-extrabold text-zinc-950 dark:text-white uppercase tracking-wider mb-4 flex items-center space-x-2">
+            <HelpCircle className="w-4 h-4" />
             <span>Popular Islamic Questions to Ask</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -147,13 +147,13 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
               <button
                 key={idx}
                 onClick={() => handleSend(prompt.query)}
-                className="text-left bg-slate-950 hover:bg-slate-800 p-3.5 rounded-xl border border-slate-800 hover:border-blue-500/50 transition-all group"
+                className="text-left bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 transition-all group"
                 id={`btn-prompt-${idx}`}
               >
-                <p className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">
+                <p className="text-xs font-extrabold text-zinc-900 dark:text-zinc-100 group-hover:underline">
                   {prompt.label}
                 </p>
-                <p className="text-[11px] text-slate-400 line-clamp-2 mt-1">
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 line-clamp-2 mt-1">
                   "{prompt.query}"
                 </p>
               </button>
@@ -168,35 +168,35 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
           <div key={msg.id}>
             {msg.sender === 'user' ? (
               <div className="flex justify-end mb-4">
-                <div className="bg-blue-600 text-white max-w-2xl px-5 py-3.5 rounded-2xl rounded-tr-none shadow-lg border border-blue-500/40">
-                  <p className="text-xs text-blue-200 font-semibold mb-1 uppercase tracking-wider">
+                <div className="bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 max-w-2xl px-5 py-3.5 rounded-2xl rounded-tr-none shadow-sm border border-zinc-900 dark:border-zinc-100">
+                  <p className="text-[10px] opacity-70 font-bold mb-1 uppercase tracking-wider">
                     Your Question:
                   </p>
-                  <p className="text-sm sm:text-base font-medium">{msg.text}</p>
-                  <span className="text-[10px] text-blue-200/80 block text-right mt-1">
+                  <p className="text-sm sm:text-base font-semibold">{msg.text}</p>
+                  <span className="text-[10px] opacity-60 block text-right mt-1 font-mono">
                     {msg.timestamp}
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6 relative">
+              <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-6 relative transition-colors">
                 
                 {msg.isLoading ? (
-                  <div className="flex items-center space-x-3 py-8 justify-center text-blue-300">
-                    <RefreshCw className="w-6 h-6 animate-spin text-blue-400" />
-                    <span className="text-sm font-medium animate-pulse">
+                  <div className="flex items-center space-x-3 py-8 justify-center text-zinc-700 dark:text-zinc-300">
+                    <RefreshCw className="w-6 h-6 animate-spin text-zinc-900 dark:text-zinc-100" />
+                    <span className="text-sm font-bold animate-pulse">
                       Searching authentic Quran and Hadith sources...
                     </span>
                   </div>
                 ) : msg.response ? (
                   <>
                     {/* Header bar of response */}
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800">
                       <div className="flex items-center space-x-2">
-                        <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
+                        <div className="w-7 h-7 rounded-lg bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 flex items-center justify-center font-extrabold text-xs">
                           ☪
                         </div>
-                        <span className="text-sm font-bold text-blue-300">
+                        <span className="text-sm font-extrabold text-zinc-900 dark:text-zinc-100">
                           Noor AI Evidence Report
                         </span>
                       </div>
@@ -210,10 +210,10 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                             savedAt: new Date().toLocaleDateString(),
                           })
                         }
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all ${
                           isSaved(msg.id)
-                            ? 'bg-blue-600 text-white font-bold'
-                            : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+                            ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950'
+                            : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white border border-zinc-200 dark:border-zinc-800'
                         }`}
                         id={`btn-save-response-${msg.id}`}
                       >
@@ -223,11 +223,11 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                     </div>
 
                     {/* Direct Answer Summary */}
-                    <div className="bg-slate-950 p-4 sm:p-5 rounded-xl border border-slate-800 shadow-inner">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 mb-2">
+                    <div className="bg-zinc-50 dark:bg-zinc-900/90 p-4 sm:p-5 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
                         Summary Answer
                       </h3>
-                      <p className="text-sm sm:text-base text-slate-100 leading-relaxed font-normal">
+                      <p className="text-sm sm:text-base text-zinc-900 dark:text-zinc-100 leading-relaxed font-normal">
                         {msg.response.directAnswer}
                       </p>
                     </div>
@@ -235,7 +235,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                     {/* Quran Evidences */}
                     {msg.response.quranEvidences && msg.response.quranEvidences.length > 0 && (
                       <div className="space-y-4">
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center space-x-2">
+                        <h3 className="text-xs font-black uppercase tracking-wider text-zinc-950 dark:text-white flex items-center space-x-2">
                           <BookOpen className="w-4 h-4" />
                           <span>Quranic Evidences ({msg.response.quranEvidences.length})</span>
                         </h3>
@@ -255,7 +255,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                     {/* Hadith Evidences */}
                     {msg.response.hadithEvidences && msg.response.hadithEvidences.length > 0 && (
                       <div className="space-y-4">
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center space-x-2">
+                        <h3 className="text-xs font-black uppercase tracking-wider text-zinc-950 dark:text-white flex items-center space-x-2">
                           <span>📜</span>
                           <span>Hadith Evidences ({msg.response.hadithEvidences.length})</span>
                         </h3>
@@ -274,19 +274,19 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
 
                     {/* Scholarly Summary & Key Takeaways */}
                     {msg.response.scholarlySummary && (
-                      <div className="bg-slate-950 p-5 rounded-xl border border-blue-500/20 shadow-inner">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-blue-300 mb-2">
+                      <div className="bg-zinc-50 dark:bg-zinc-900/90 p-5 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                        <h4 className="text-xs font-black uppercase tracking-wider text-zinc-950 dark:text-white mb-2">
                           Scholarly Guidance & Key Takeaways
                         </h4>
-                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-3">
+                        <p className="text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed mb-3">
                           {msg.response.scholarlySummary}
                         </p>
 
                         {msg.response.keyTakeaways && msg.response.keyTakeaways.length > 0 && (
-                          <ul className="space-y-1.5 pl-2 border-l-2 border-blue-500 text-xs text-slate-300">
+                          <ul className="space-y-1.5 pl-3 border-l-2 border-zinc-900 dark:border-zinc-100 text-xs text-zinc-800 dark:text-zinc-200">
                             {msg.response.keyTakeaways.map((point, pIdx) => (
                               <li key={pIdx} className="flex items-start space-x-2">
-                                <span className="text-blue-400 font-bold">•</span>
+                                <span className="font-bold">•</span>
                                 <span>{point}</span>
                               </li>
                             ))}
@@ -294,7 +294,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                         )}
 
                         {msg.response.closingReflection && (
-                          <p className="mt-4 pt-3 border-t border-slate-800 text-right text-sm text-blue-200 font-serif" dir="rtl">
+                          <p className="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-800 text-right text-sm text-zinc-800 dark:text-zinc-200 font-serif" dir="rtl">
                             {msg.response.closingReflection}
                           </p>
                         )}
@@ -313,9 +313,9 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
 
       {/* Error Alert if any */}
       {errorText && (
-        <div className="mb-4 p-3 bg-rose-950/90 border border-rose-800 text-rose-300 rounded-xl text-xs flex items-center justify-between">
+        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200 rounded-xl text-xs flex items-center justify-between font-bold">
           <span>{errorText}</span>
-          <button onClick={() => setErrorText(null)} className="font-bold underline text-xs">
+          <button onClick={() => setErrorText(null)} className="underline text-xs">
             Dismiss
           </button>
         </div>
@@ -328,7 +328,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
             e.preventDefault();
             handleSend();
           }}
-          className="bg-slate-900/95 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-slate-800 shadow-2xl flex items-center space-x-2"
+          className="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xl flex items-center space-x-2 transition-colors"
         >
           <input
             type="text"
@@ -336,7 +336,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
             onChange={(e) => setInputQuery(e.target.value)}
             placeholder="Ask any Islamic question (e.g., Virtues of Tahajjud, Sabr, Zakat, Rights of Parents)..."
             disabled={isLoading}
-            className="flex-1 bg-slate-950 text-white placeholder-slate-500 text-xs sm:text-sm px-4 py-3 rounded-xl border border-slate-800 focus:border-blue-500 focus:outline-none"
+            className="flex-1 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 text-xs sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 focus:border-zinc-900 dark:focus:border-zinc-100 focus:outline-none"
             id="input-islamic-ai-query"
           />
 
@@ -344,7 +344,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
             type="submit"
             disabled={isLoading || !inputQuery.trim()}
             id="btn-send-query"
-            className="px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center space-x-2 disabled:opacity-50 shrink-0"
+            className="px-5 py-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 font-extrabold text-xs sm:text-sm rounded-xl shadow-sm transition-all flex items-center space-x-2 disabled:opacity-50 shrink-0"
           >
             <span>Ask AI</span>
             <Send className="w-4 h-4" />
@@ -355,3 +355,4 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
     </div>
   );
 };
+

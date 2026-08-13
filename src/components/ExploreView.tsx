@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { SAMPLE_TOPICS, SampleTopic } from '../data/sampleTopics';
+import { SAMPLE_TOPICS } from '../data/sampleTopics';
 import { EvidenceCard } from './EvidenceCard';
-import { Compass, BookOpen, Bookmark, ArrowRight, Check } from 'lucide-react';
+import { Compass, ArrowRight } from 'lucide-react';
 import { SavedEvidence } from '../types';
 
 interface ExploreViewProps {
@@ -31,19 +31,19 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 font-sans">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 font-sans text-zinc-900 dark:text-zinc-100 transition-colors">
       
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl mb-8">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-sm mb-8 transition-colors">
         <div className="flex items-center space-x-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 text-blue-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 border border-zinc-300 dark:border-zinc-800 flex items-center justify-center font-bold">
             <Compass className="w-5 h-5" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white">
             Explore Essential Islamic Topics
           </h1>
         </div>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-3xl">
+        <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-3xl">
           Browse foundational Islamic knowledge topics complete with Arabic Quranic verses, Hadith citations, and English translations.
         </p>
 
@@ -53,10 +53,10 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
                 selectedCategory === cat
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'bg-slate-950 text-slate-300 border border-slate-800 hover:border-blue-500'
+                  ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 shadow-sm'
+                  : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600'
               }`}
               id={`cat-btn-${cat}`}
             >
@@ -74,19 +74,19 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           return (
             <div
               key={topic.id}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-blue-500/40 transition-all"
+              className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm transition-all"
             >
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
                 <div>
                   <div className="flex items-center space-x-2 mb-1">
-                    <span className="px-2.5 py-0.5 text-[10px] uppercase font-bold bg-slate-800 text-blue-300 border border-slate-700 rounded-md">
+                    <span className="px-2.5 py-0.5 text-[10px] uppercase font-bold bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-md">
                       {topic.category}
                     </span>
-                    <h2 className="text-lg font-bold text-blue-200">
+                    <h2 className="text-lg font-extrabold text-zinc-900 dark:text-zinc-100">
                       {topic.title}
                     </h2>
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-300">
+                  <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                     {topic.description}
                   </p>
                 </div>
@@ -95,7 +95,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   <button
                     onClick={() => onAskTopic(topic.question)}
                     id={`btn-ask-topic-${topic.id}`}
-                    className="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center space-x-1.5"
+                    className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 font-extrabold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1.5"
                   >
                     <span>Ask AI About This</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -103,7 +103,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
                   <button
                     onClick={() => setExpandedTopicId(isExpanded ? null : topic.id)}
-                    className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors"
+                    className="px-3 py-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-xs font-semibold rounded-xl transition-colors border border-zinc-200 dark:border-zinc-800"
                   >
                     {isExpanded ? 'Hide Evidences' : 'View Evidences'}
                   </button>
@@ -112,8 +112,8 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
               {/* Preview Arabic verse if collapsed */}
               {!isExpanded && topic.previewArabic && (
-                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-right mt-2">
-                  <p className="text-base text-blue-200/90 font-serif" dir="rtl">
+                <div className="bg-zinc-50 dark:bg-zinc-900/90 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 text-right mt-2">
+                  <p className="text-base text-zinc-800 dark:text-zinc-200 font-serif" dir="rtl">
                     {topic.previewArabic}
                   </p>
                 </div>
@@ -121,14 +121,14 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
               {/* Expanded Evidences Display */}
               {isExpanded && (
-                <div className="mt-6 pt-6 border-t border-slate-800 space-y-6">
+                <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-800 space-y-6">
                   
                   {/* Direct Answer */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">
+                  <div className="bg-zinc-50 dark:bg-zinc-900/90 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                    <h3 className="text-xs font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
                       Overview Explanation
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed">
                       {topic.presetData.directAnswer}
                     </p>
                   </div>
@@ -184,3 +184,4 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
     </div>
   );
 };
+

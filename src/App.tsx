@@ -7,10 +7,23 @@ import { DashboardView } from './components/DashboardView';
 import { ChatWorkspace } from './components/ChatWorkspace';
 import { ExploreView } from './components/ExploreView';
 import { SavedView } from './components/SavedView';
+import { ThemeMode, SettingsModal } from './components/SettingsModal';
 
 export default function App() {
   // Application View state: default to 'landing' (overview) per requirements
   const [currentView, setCurrentView] = useState<AppView>('landing');
+
+  // Theme preference state: 'dark' | 'light' | 'system'
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    try {
+      const saved = localStorage.getItem('noor_ai_theme');
+      return (saved as ThemeMode) || 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // User Authentication state
   const [user, setUser] = useState<User | null>(() => {
@@ -42,6 +55,44 @@ export default function App() {
     }
   });
 
+  // Apply Theme Mode (Dark / Light / System Default)
+  useEffect(() => {
+    const root = document.documentElement;
+    const applyTheme = (isDark: boolean) => {
+      if (isDark) {
+        root.classList.add('dark');
+        document.body.style.backgroundColor = '#000000';
+        document.body.style.color = '#ffffff';
+      } else {
+        root.classList.remove('dark');
+        document.body.style.backgroundColor = '#ffffff';
+        document.body.style.color = '#09090b';
+      }
+    };
+
+    if (themeMode === 'dark') {
+      applyTheme(true);
+    } else if (themeMode === 'light') {
+      applyTheme(false);
+    } else {
+      // System Default Mode
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      applyTheme(mediaQuery.matches);
+
+      const handleChange = (e: MediaQueryListEvent) => {
+        applyTheme(e.matches);
+      };
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+
+    try {
+      localStorage.setItem('noor_ai_theme', themeMode);
+    } catch (e) {
+      console.error('Failed to save theme', e);
+    }
+  }, [themeMode]);
+
   // Persist Font Size
   useEffect(() => {
     try {
@@ -68,7 +119,6 @@ export default function App() {
     } catch (e) {
       console.error('Failed to save user state', e);
     }
-    // Automatically transition to the Islamic AI main dashboard after sign in / sign up
     setCurrentView('dashboard');
   };
 
@@ -83,7 +133,7 @@ export default function App() {
   const handleSaveEvidence = (evidence: SavedEvidence) => {
     setSavedEvidences((prev) => {
       if (prev.some((item) => item.id === evidence.id)) {
-        return prev.filter((item) => item.id !== evidence.id); // Toggle off if already saved
+        return prev.filter((item) => item.id !== evidence.id);
       }
       return [evidence, ...prev];
     });
@@ -94,8 +144,13 @@ export default function App() {
     setSavedEvidences((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const handleClearData = () => {
+    localStorage.removeItem('islamic_ai_saved');
+    setSavedEvidences([]);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-white text-zinc-900 dark:bg-black dark:text-zinc-100 flex flex-col font-sans antialiased transition-colors duration-200 selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-950">
       
       {/* Top Navbar */}
       <Navbar
@@ -105,6 +160,9 @@ export default function App() {
         onLogout={handleLogout}
         arabicFontSize={arabicFontSize}
         setArabicFontSize={setArabicFontSize}
+        themeMode={themeMode}
+        setThemeMode={setThemeMode}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Primary Page Content Router */}
@@ -162,6 +220,18 @@ export default function App() {
         )}
       </main>
 
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        themeMode={themeMode}
+        setThemeMode={setThemeMode}
+        arabicFontSize={arabicFontSize}
+        setArabicFontSize={setArabicFontSize}
+        onClearData={handleClearData}
+      />
+
     </div>
   );
 }
+
