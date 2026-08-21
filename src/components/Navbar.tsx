@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header className="sticky top-0 z-40 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm px-4 py-3 transition-colors">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           
-          {/* Left: Menu & Settings Quick Button */}
+          {/* Left: Menu Button */}
           <div className="flex items-center space-x-1">
             <button
               onClick={() => setIsDrawerOpen(true)}
@@ -58,15 +58,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label="Open Menu"
             >
               <Menu className="w-5 h-5" />
-            </button>
-
-            <button
-              onClick={onOpenSettings}
-              className="p-2 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-xl transition-colors flex items-center justify-center"
-              title="Settings & Themes"
-              aria-label="Settings"
-            >
-              <Settings className="w-5 h-5" />
             </button>
           </div>
 
