@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, BookOpen, Bookmark, ShieldAlert, RefreshCw, HelpCircle } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Sparkles, Send, BookOpen, Bookmark, ShieldAlert, RefreshCw, HelpCircle, AlertCircle, RotateCcw } from 'lucide-react';
 import { IslamicAIResponse, QAMessage, SavedEvidence } from '../types';
 import { EvidenceCard } from './EvidenceCard';
 
@@ -7,6 +7,8 @@ interface ChatWorkspaceProps {
   arabicFontSize: 'normal' | 'large' | 'xlarge';
   onSaveEvidence: (evidence: SavedEvidence) => void;
   savedEvidences: SavedEvidence[];
+  initialQuery?: string;
+  onClearInitialQuery?: () => void;
 }
 
 const QUICK_PROMPTS = [
@@ -22,6 +24,8 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
   arabicFontSize,
   onSaveEvidence,
   savedEvidences,
+  initialQuery,
+  onClearInitialQuery,
 }) => {
   const [messages, setMessages] = useState<QAMessage[]>([]);
   const [inputQuery, setInputQuery] = useState('');
@@ -40,9 +44,9 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
   }, [messages, isLoading]);
 
   // Handle Asking Question
-  const handleSend = async (queryText?: string) => {
-    const textToSend = queryText || inputQuery;
-    if (!textToSend.trim() || isLoading) return;
+  const handleSend = useCallback(async (queryText?: string) => {
+    const textToSend = (queryText || inputQuery).trim();
+    if (!textToSend || isLoading) return;
 
     const userMsgId = 'msg_user_' + Date.now();
     const aiMsgId = 'msg_ai_' + Date.now();
@@ -79,7 +83,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
       });
 
       if (!res.ok) {
-        throw new Error('Server returned an error status: ' + res.status);
+        throw new Error('Server returned error ' + res.status);
       }
 
       const data: IslamicAIResponse = await res.json();
@@ -97,12 +101,32 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
       );
     } catch (err: any) {
       console.error('Error fetching Islamic AI answer:', err);
-      setErrorText('Could not complete query. Please check your network and try again.');
-      setMessages((prev) => prev.filter((m) => m.id !== aiMsgId));
+      setErrorText('Connection error. Please try again.');
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === aiMsgId
+            ? {
+                ...m,
+                isLoading: false,
+                text: 'Could not connect to Islamic knowledge service. Please check your network or try again.',
+              }
+            : m
+        )
+      );
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [inputQuery, isLoading, messages, selectedCategory]);
+
+  // Trigger initial query if passed from other views
+  useEffect(() => {
+    if (initialQuery && initialQuery.trim()) {
+      handleSend(initialQuery.trim());
+      if (onClearInitialQuery) {
+        onClearInitialQuery();
+      }
+    }
+  }, [initialQuery, handleSend, onClearInitialQuery]);
 
   const isSaved = (msgId: string) => {
     return savedEvidences.some((s) => s.id === msgId);
@@ -302,7 +326,26 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                     )}
 
                   </>
-                ) : null}
+                ) : (
+                  <div className="p-4 bg-zinc-50 dark:bg-zinc-900/90 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                    <div className="flex items-center space-x-2 text-zinc-700 dark:text-zinc-300 mb-3">
+                      <AlertCircle className="w-5 h-5 text-amber-500" />
+                      <span className="text-sm font-semibold">{msg.text || 'Unable to retrieve answer.'}</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const previousUserMsg = messages.slice(0, messages.indexOf(msg)).reverse().find(m => m.sender === 'user');
+                        if (previousUserMsg?.text) {
+                          handleSend(previousUserMsg.text);
+                        }
+                      }}
+                      className="px-4 py-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-bold rounded-xl flex items-center space-x-1.5 hover:opacity-90 transition-opacity"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Retry Question</span>
+                    </button>
+                  </div>
+                )}
 
               </div>
             )}

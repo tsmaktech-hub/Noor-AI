@@ -55,6 +55,9 @@ export default function App() {
     }
   });
 
+  // Active query to forward from Dashboard/Explore into Chat
+  const [activeChatQuery, setActiveChatQuery] = useState<string>('');
+
   // Apply Theme Mode (Dark / Light / System Default)
   useEffect(() => {
     const root = document.documentElement;
@@ -184,7 +187,8 @@ export default function App() {
         {currentView === 'dashboard' && (
           <DashboardView
             arabicFontSize={arabicFontSize}
-            onAskTopic={(_question) => {
+            onAskTopic={(question) => {
+              setActiveChatQuery(question);
               setCurrentView('chat');
             }}
             onSaveEvidence={handleSaveEvidence}
@@ -197,13 +201,16 @@ export default function App() {
             arabicFontSize={arabicFontSize}
             onSaveEvidence={handleSaveEvidence}
             savedEvidences={savedEvidences}
+            initialQuery={activeChatQuery}
+            onClearInitialQuery={() => setActiveChatQuery('')}
           />
         )}
 
         {currentView === 'explore' && (
           <ExploreView
             arabicFontSize={arabicFontSize}
-            onAskTopic={(_question) => {
+            onAskTopic={(question) => {
+              setActiveChatQuery(question);
               setCurrentView('chat');
             }}
             onSaveEvidence={handleSaveEvidence}
