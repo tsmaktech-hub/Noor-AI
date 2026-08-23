@@ -66,12 +66,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           <img
             src={slide.image}
             alt={slide.title}
-            className="w-full h-full object-cover object-center filter brightness-[0.38] contrast-[1.08]"
+            className="w-full h-full object-cover object-center filter brightness-[0.75] contrast-[1.05]"
             referrerPolicy="no-referrer"
           />
-          {/* Overlays for Depth and Contrast */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/40" />
-          <div className="absolute inset-0 bg-radial from-transparent via-slate-950/30 to-slate-950/90" />
+          {/* Subtle Overlays for Balance and Text Readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/40 to-zinc-950/20" />
+          <div className="absolute inset-0 bg-black/25" />
         </div>
       ))}
 
@@ -82,10 +82,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
             <Moon className="w-4 h-4 sm:w-5 sm:h-5 fill-zinc-950" />
           </div>
           <div>
-            <h1 className="font-extrabold text-base sm:text-xl tracking-tight text-white">
+            <h1 className="font-extrabold text-base sm:text-xl tracking-tight text-white drop-shadow-md">
               Noor AI
             </h1>
-            <p className="text-[9px] sm:text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">
+            <p className="text-[9px] sm:text-[10px] text-zinc-300 uppercase tracking-wider font-bold drop-shadow">
               Verified Evidences
             </p>
           </div>
@@ -94,7 +94,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
         <button
           onClick={onGetStarted}
           id="btn-top-app-login"
-          className="hidden sm:inline-flex px-3 py-1.5 sm:px-4 sm:py-2 bg-zinc-900/90 hover:bg-zinc-800 text-white border border-zinc-700 rounded-xl text-[11px] sm:text-xs font-bold transition-all backdrop-blur-md"
+          className="hidden sm:inline-flex px-3 py-1.5 sm:px-4 sm:py-2 bg-zinc-900/80 hover:bg-zinc-900 text-white border border-zinc-600 rounded-xl text-[11px] sm:text-xs font-bold transition-all backdrop-blur-md shadow-lg"
         >
           Sign In
         </button>
@@ -104,33 +104,37 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
       <main className="relative z-20 max-w-2xl mx-auto px-4 sm:px-6 text-center my-auto py-2 sm:py-4">
         
         {/* Slide Badge */}
-        <div className="inline-flex items-center space-x-1.5 bg-zinc-900/90 border border-zinc-700 text-zinc-200 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4 shadow-xl backdrop-blur-md">
+        <div className="inline-flex items-center space-x-1.5 bg-zinc-900/80 border border-zinc-600 text-zinc-100 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-3 sm:mb-4 shadow-lg backdrop-blur-md">
           <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white animate-pulse" />
           <span>{activeSlide.badge}</span>
         </div>
 
         {/* Dynamic Title */}
-        <h2 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight mb-2 sm:mb-4">
+        <h2 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight mb-2 sm:mb-4 drop-shadow-lg">
           {activeSlide.title}
         </h2>
 
         {/* Subtitle Overview - Shortened & Responsive */}
-        <p className="text-xs sm:text-sm text-zinc-300 max-w-lg mx-auto leading-relaxed mb-3 sm:mb-6 font-normal drop-shadow hidden sm:block">
+        <p className="text-xs sm:text-sm text-zinc-100 max-w-lg mx-auto leading-relaxed mb-3 sm:mb-6 font-medium drop-shadow-md hidden sm:block">
           {activeSlide.subtitle}
         </p>
 
         {/* Quran Verse Display */}
-        <div className="bg-zinc-950/85 border border-zinc-800 rounded-2xl p-3 sm:p-5 max-w-lg mx-auto mb-5 sm:mb-8 shadow-2xl backdrop-blur-md">
-          <p className="text-base sm:text-xl text-white font-serif leading-relaxed mb-1.5 text-right" dir="rtl">
+        <div className="bg-zinc-950/75 border border-zinc-700/80 rounded-2xl p-4 sm:p-6 max-w-lg mx-auto shadow-2xl backdrop-blur-md">
+          <p className="text-base sm:text-xl text-white font-serif leading-relaxed mb-2 text-right" dir="rtl">
             {activeSlide.verse}
           </p>
-          <p className="text-[10px] sm:text-xs text-zinc-400 italic">
+          <p className="text-[11px] sm:text-xs text-zinc-300 italic">
             {activeSlide.verseTranslation}
           </p>
         </div>
 
-        {/* Primary Action Button */}
-        <div className="flex items-center justify-center max-w-xs sm:max-w-md mx-auto">
+      </main>
+
+      {/* Bottom Actions & Pagination Dots */}
+      <footer className="relative z-20 px-6 py-6 sm:py-8 max-w-md mx-auto w-full flex flex-col items-center space-y-5">
+        {/* Primary Action Button placed at the bottom */}
+        <div className="w-full">
           <button
             onClick={onGetStarted}
             id="btn-hero-get-started"
@@ -141,17 +145,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           </button>
         </div>
 
-      </main>
-
-      {/* Bottom Pagination Dots Only */}
-      <footer className="relative z-20 px-6 py-4 sm:py-6 max-w-3xl mx-auto w-full flex items-center justify-center">
+        {/* Carousel Pagination Dots */}
         <div className="flex items-center space-x-2">
           {CAROUSEL_SLIDES.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
               className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                idx === currentSlide ? 'w-6 sm:w-8 bg-blue-400 shadow-md' : 'w-1.5 sm:w-2 bg-slate-700 hover:bg-slate-500'
+                idx === currentSlide ? 'w-6 sm:w-8 bg-white shadow-md' : 'w-1.5 sm:w-2 bg-zinc-500 hover:bg-zinc-400'
               }`}
               title={`Slide ${idx + 1}`}
             />
