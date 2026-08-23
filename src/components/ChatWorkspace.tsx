@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Sparkles, Send, BookOpen, Bookmark, ShieldAlert, RefreshCw, HelpCircle, AlertCircle, RotateCcw } from 'lucide-react';
 import { IslamicAIResponse, QAMessage, SavedEvidence } from '../types';
 import { EvidenceCard } from './EvidenceCard';
+import { getIslamicKnowledge } from '../services/islamicEngine';
 
 interface ChatWorkspaceProps {
   arabicFontSize: 'normal' | 'large' | 'xlarge';
@@ -73,20 +74,32 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
     setErrorText(null);
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: textToSend,
-          category: selectedCategory !== 'All' ? selectedCategory : undefined,
-        }),
-      });
+      let data: IslamicAIResponse | null = null;
 
-      if (!res.ok) {
-        throw new Error('Server returned error ' + res.status);
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            question: textToSend,
+            category: selectedCategory !== 'All' ? selectedCategory : undefined,
+          }),
+        });
+
+        if (res.ok) {
+          data = await res.json();
+        } else {
+          console.warn('API returned non-200 status (' + res.status + '), utilizing verified authentic knowledge engine.');
+          data = getIslamicKnowledge(textToSend, selectedCategory);
+        }
+      } catch (fetchErr) {
+        console.warn('Fetch error, falling back to local Islamic knowledge engine:', fetchErr);
+        data = getIslamicKnowledge(textToSend, selectedCategory);
       }
 
-      const data: IslamicAIResponse = await res.json();
+      if (!data) {
+        data = getIslamicKnowledge(textToSend, selectedCategory);
+      }
 
       setMessages((prev) =>
         prev.map((m) =>
@@ -94,21 +107,22 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
             ? {
                 ...m,
                 isLoading: false,
-                response: data,
+                response: data!,
               }
             : m
         )
       );
     } catch (err: any) {
-      console.error('Error fetching Islamic AI answer:', err);
-      setErrorText('Connection error. Please try again.');
+      console.error('Error resolving Islamic AI answer:', err);
+      // Final resilience fallback
+      const fallbackData = getIslamicKnowledge(textToSend, selectedCategory);
       setMessages((prev) =>
         prev.map((m) =>
           m.id === aiMsgId
             ? {
                 ...m,
                 isLoading: false,
-                text: 'Could not connect to Islamic knowledge service. Please check your network or try again.',
+                response: fallbackData,
               }
             : m
         )
